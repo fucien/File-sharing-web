@@ -1,0 +1,35 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model User
+
+<html>
+<head>
+	<title>Login Page</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+</head>
+<body>
+<div class="login-page">
+	<div class="form">
+		<form method="post">
+				<input asp-for="Email" type="text" placeholder="username" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+				<input asp-for="Password" type="password" placeholder="password" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			<button type="submit">login</button>
+			<p class="message">Not registered? <a href="./Register">Create an account</a></p>
+		</form>
+	</div>
+</div>
+
+</body>
+</html>
+
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
+```

@@ -1,0 +1,28 @@
+﻿@model File
+@{
+    ViewData["Title"] = "View";
+}
+
+<html>
+<head>
+	<title>File Upload Form</title>
+</head>
+<body>
+<h1>File Upload Form</h1>
+	<form asp-action="UploadFile" method="post" enctype="multipart/form-data">
+
+
+	<div id="fileInput" >
+		<label for="file">File Upload:</label>
+		<input type="file" id="file" name="file"><br><br>
+	</div>
+
+	<label for="deleteAfterAccess">Delete File after Access:</label>
+	<input asp-for="Status" type="checkbox" id="Status" name="Status"><br><br>
+
+	<input type="submit" value="Submit">
+</form>
+
+
+</body>
+</html>

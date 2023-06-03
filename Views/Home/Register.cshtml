@@ -1,0 +1,42 @@
+﻿@model User
+
+<html>
+<head>
+	<title>Register Page</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+	<script>
+    $(document).ready(function() {
+      $('form.register-form').submit(function(event) {
+        var password = $('#password').val();
+        var confirmPassword = $('#confirmpassword').val();
+
+        if (password !== confirmPassword) {
+          event.preventDefault(); // Prevent form submission
+          alert("Passwords do not match. Please try again.");
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="reg-page">
+	<div class="form">
+		<form method="post">
+			<input asp-for="Email" type="text" placeholder="username/email" class="form-control" />
+			<span asp-validation-for="Email" class="text-danger"></span>
+			<input asp-for="Password" type="password" id="password" placeholder="password" class="form-control" />
+			<input type="password" id="confirmpassword" placeholder="confirm password" />
+			<button type ="submit">Register</button>
+			<p class="message">Already registered? <a href="./Login">Sign In</a></p>
+		</form>
+	</div>
+</div>
+</body>
+</html>
+
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
