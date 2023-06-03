@@ -13,10 +13,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);         
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton(UrlEncoder.Default);
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 

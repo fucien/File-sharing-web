@@ -3,6 +3,7 @@ using System.IO.Enumeration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web;
+using Microsoft.Extensions.Configuration;
 using System.Text.Encodings.Web;
 using Amazon;
 using web_ver_2.Models;
@@ -19,22 +20,24 @@ namespace web_ver_2.Controllers
     {
 	    private readonly ApplicationDbContext _db;
 
-	    public UserController(ApplicationDbContext db)
+	    private readonly IConfiguration _conf;
+
+	    public UserController(ApplicationDbContext db, IConfiguration conf)
 	    {
 		    _db = db;
+			_conf = conf;
 	    }
 
 		// GET: UserController
 		[Authentication]
-        public IActionResult UploadFile()
+        public IActionResult UploadFileView()
         {
             return View();
         }
         public async Task<IActionResult> UploadFile(IFormFile file, bool Status)
         {
 			
-	        using (var client = new AmazonS3Client("AKIA4AM2ORFMQLQKQZPB",
-					   "97XPo066xNI7r98m5iLr1k76W5QaZ4IuYLPlmL9P",
+	        using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"], _conf.GetSection("AWS")["SecretKey"],
 		               RegionEndpoint.APSoutheast1))
 	        {
 		        using (var newMemoryStream = new MemoryStream())
