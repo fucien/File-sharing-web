@@ -1,13 +1,7 @@
-﻿using System.Configuration;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting;
-using System.Web;
 using Amazon;
-using Microsoft.Data.SqlClient;
 using web_ver_2.Models;
 using web_ver_2.Data;
 using Amazon.S3.Transfer;

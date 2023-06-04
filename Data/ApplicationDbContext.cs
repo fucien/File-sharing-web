@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using web_ver_2.Models;
-using System.Reflection.Metadata;
 
 namespace web_ver_2.Data
 {
