@@ -28,5 +28,5 @@ An ASP .NET web app used for uploading and sharing files and texts.
 ## Features in development
 
 - Docker File
-- Alerts on successful login/register.
+- Alerts on successful operations.
 - Tests
