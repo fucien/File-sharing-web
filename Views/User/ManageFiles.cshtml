@@ -6,6 +6,78 @@
 }
 
 <html>
+<head>
+	<style>
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 100px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 60%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+
+}
+	</style>
+
+
+</head>
 <h1>File Manager</h1>
 <div class="container p-3">
 	<div class="row pt-4">
@@ -16,43 +88,58 @@
 	<br /><br />
 
 	<table class="table table-bordered table-striped" style="width:100%">
-		<thead>
-		<tr>
-			<th>
-				File Name
-			</th>
-			<th>
-				File Type
-			</th>
-			<th>
-				Status
-			</th>
-			<th></th>
+	<thead>
+	<tr>
+		<th>
+			File Name
+		</th>
+		<th>
+			File Type
+		</th>
+		<th>
+			Status
+		</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach(var obj in Model)
+{
+	<tr>
+	<td width="40%">
+		@obj.Name
+	</td>
+	<td width="15%">
+		@obj.Type
+	</td>
+	<td width="15%">
+		@obj.Status
+	</td>
+		<td>
+			<form method="post" asp-action="Delete" asp-route-id="@obj.Name">
+				<input type="hidden" name="Name" value="@obj.Name" />
+				<button type="submit" class="btn btn-danger mx-2">
+					<i class="bi bi-trash-fill"></i> Delete
+				</button>
+			</form>
+
+			<div class="box">
+							<a class="btn btn-danger mx-2" href="#popup@(obj.Name)">View Link</a>
+			</div>
+
+						<div id="popup@(obj.Name)" class="overlay">
+				<div class="popup">
+					<h2>Copy the below link to share your file</h2>
+					<a class="close" href="#">&times;</a>
+					<div class="content">
+						http://localhost:7265/Home/File&@(obj.URL)
+					</div>
+				</div>
+			</div>
+		</td>
 		</tr>
-		</thead>
-		<tbody>
-		@foreach(var obj in Model)
-		{
-			<tr>
-				<td width="40%">
-					@obj.Name
-				</td>
-				<td width="15%">
-					@obj.Type
-				</td>
-				<td width="15%">
-					@obj.Status
-				</td>
-				<td>
-					<form method="post" asp-action="Delete" asp-route-id="@obj.Name">
-						<input type="hidden" name="Name" value="@obj.Name" />
-						<button type="submit" class="btn btn-danger mx-2">
-							<i class="bi bi-trash-fill"></i> Delete
-						</button>
-					</form>
-				</td>
-			</tr>
-		}
+}
+		
 		</tbody>
 
 	</table>

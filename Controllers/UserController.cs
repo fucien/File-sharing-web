@@ -110,7 +110,7 @@ namespace web_ver_2.Controllers
         public IActionResult ManageFiles()
         {
 			//Get user files from database
-			IEnumerable<File> objList = _db.File.Where(u => u.Email == HttpContext.Session.GetString("UserName")).ToList();
+			IEnumerable<File> objList = _db.File.Where(u => u.Email == HttpContext.Session.GetString("UserName") && u.Status != "Deleted").ToList();
 			return View(objList);
         }
 
