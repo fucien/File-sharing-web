@@ -8,8 +8,8 @@
 	<title>File Upload Form</title>
 </head>
 <body>
-<h1>File Upload Form</h1>
-	<form asp-action="UploadFile" method="post" enctype="multipart/form-data">
+<h1>File Uploader</h1>
+<form asp-action="UploadFile" method="post" enctype="multipart/form-data">
 
 
 	<div id="fileInput" >
@@ -22,6 +22,7 @@
 
 	<input type="submit" value="Submit">
 </form>
+	<p class="message">Want to upload text? <a href="./UploadTextView">Switch to text submission</a></p>
 
 
 </body>

@@ -1,4 +1,5 @@
 ﻿
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
 using Amazon;
@@ -28,6 +29,11 @@ namespace web_ver_2.Controllers
 		// GET: UserController
 		[Authentication]
 		public IActionResult UploadFileView()
+		{
+			return View();
+		}
+
+		public IActionResult UploadTextView()
 		{
 			return View();
 		}
@@ -63,6 +69,50 @@ namespace web_ver_2.Controllers
 				dbFile.URL = HashString(file.FileName + HttpContext.Session.GetString("UserMame"));
 				dbFile.Name = file.FileName;
 				dbFile.Type = file.FileName.Split('.')[1];
+				if (Status == true)
+				{
+					dbFile.Status = "DeleteOnView";
+				}
+				else
+				{
+					dbFile.Status = "Active";
+				}
+				dbFile.Email = HttpContext.Session.GetString("UserName");
+				_db.File.Add(dbFile);
+				_db.SaveChanges();
+				return RedirectToAction("ManageFiles", "User");
+			}
+		}
+
+		[Authentication]
+		[HttpPost]
+
+		public IActionResult UploadText(string Name, string content, bool Status)
+		{
+			//Convert text to a name.txt file
+			byte[] byteArray = Encoding.ASCII.GetBytes(content);
+			MemoryStream stream = new MemoryStream(byteArray);
+			IFormFile file = new FormFile(stream, 0, byteArray.Length, Name, Name + ".txt");
+
+			//Upload file to aws server
+			using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"],
+				       _conf.GetSection("AWS")["SecretKey"],
+				       RegionEndpoint.APSoutheast1))
+			{
+				client.PutObjectAsync(new PutObjectRequest
+				{
+						BucketName = "ienbucket",
+						Key = Name + ".txt",
+						ContentBody = content,
+						CannedACL = S3CannedACL.PublicRead
+					}
+				);
+
+					//Adding uploaded file to database
+				File dbFile = new File();
+				dbFile.URL = HashString(file.FileName + HttpContext.Session.GetString("UserMame"));
+				dbFile.Name = file.FileName;
+				dbFile.Type = "txt";
 				if (Status == true)
 				{
 					dbFile.Status = "DeleteOnView";
