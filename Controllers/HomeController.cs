@@ -3,21 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting;
+using System.Web;
+using Amazon;
 using Microsoft.Data.SqlClient;
 using web_ver_2.Models;
 using web_ver_2.Data;
+using Amazon.S3.Transfer;
+using Amazon.S3.Model;
+using Amazon.S3;
+using File = web_ver_2.Models.File;
 
 namespace web_ver_2.Controllers
 {
 	
 	public class HomeController : Controller
     {
-	    private readonly ApplicationDbContext _db;
+		private readonly IConfiguration _conf;
 
-        public HomeController(ApplicationDbContext db)
+
+		private readonly ApplicationDbContext _db;
+
+        public HomeController(ApplicationDbContext db, IConfiguration conf)
         {
             _db = db;
+            _conf = conf;
         }
 
         public IActionResult Login()
@@ -104,6 +115,16 @@ namespace web_ver_2.Controllers
 			}
 		}
 
+        public IActionResult File(string id)
+        {
+	        var fileData = new Models.File();
+            fileData = _db.File.FirstOrDefault(u => u.URL == id);
+            if (fileData == null || fileData.Status == "Deleted") //if file is deleted or doesn't exist
+            {
+				return RedirectToAction("Index", "Home");
+			}
+            return View(fileData);
+        }
 
         public IActionResult Privacy()
         {
@@ -116,7 +137,48 @@ namespace web_ver_2.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        public async Task<IActionResult> DownloadFile(string id)
+        {
+			using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"], _conf.GetSection("AWS")["SecretKey"],
+				       RegionEndpoint.APSoutheast1))
+			{
+				//delete file from aws server
+				var transferUtility = new TransferUtility(client);
+				try
+				{
+					var response = await transferUtility.S3Client.GetObjectAsync("ienbucket", id);
+					if (response.ResponseStream == null)
+					{
+						return RedirectToAction("Home", "User");
+					}
+					var file = new File();
+					file = _db.File.FirstOrDefault(u => u.Name == id);
+					if (file.Status == "DeleteOnView")
+					{
+						//delete file from aws server
+						var deleteObjectRequest = new DeleteObjectRequest
+						{
+							BucketName = "ienbucket",
+							Key = id
+						};
+						await client.DeleteObjectAsync(deleteObjectRequest);
 
+						//edit status to deleted
+						_db.File.FirstOrDefault(u => u.Name == id).Status = "Deleted";
+
+						_db.SaveChanges();
+					}
+
+					return File(response.ResponseStream, response.Headers["Content-Type"], id);
+				}
+				catch (Exception)
+				{
+					return RedirectToAction("Index", "Home");
+				}
+				//look for file status in database
+
+			}
+		}
 
 		static string HashString(string text, string salt = "")
 		{

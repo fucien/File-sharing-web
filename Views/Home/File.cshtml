@@ -1,0 +1,10 @@
+﻿@model File
+
+
+
+<p> @Model.Email </p>
+
+<form asp-action="DownloadFile">
+	<input type="hidden" id="id" name = "id" value="@Model.Name" />
+	<input type="submit" value="Download" />
+</form>

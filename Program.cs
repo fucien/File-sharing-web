@@ -42,12 +42,20 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllerRoute(
+		name: "Guest View File",
+		pattern: "Home/File/{id}",
+		defaults: new { controller = "Home", action = "File" }
+	);
+
+	endpoints.MapControllerRoute(
+		name: "default",
+		pattern: "{controller=Home}/{action=Index}/{id?}"
+	);
+});
+
 
 app.MapRazorPages();
 

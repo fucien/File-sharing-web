@@ -1,10 +1,6 @@
-﻿using System.Drawing;
-using System.IO.Enumeration;
-using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web;
-using Microsoft.Extensions.Configuration;
-using System.Text.Encodings.Web;
+
 using Amazon;
 using web_ver_2.Models;
 using web_ver_2.Utilities;
@@ -75,7 +71,6 @@ namespace web_ver_2.Controllers
 				{
 					dbFile.Status = "Active";
 				}
-
 				dbFile.Email = HttpContext.Session.GetString("UserName");
 				_db.File.Add(dbFile);
 				_db.SaveChanges();
@@ -92,6 +87,7 @@ namespace web_ver_2.Controllers
 	        using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"], _conf.GetSection("AWS")["SecretKey"],
 		               RegionEndpoint.APSoutheast1))
 	        {
+				//delete file from aws server
 				var transferUtility = new TransferUtility(client);
 				await transferUtility.S3Client.DeleteObjectAsync("ienbucket", id);
 		        //Change file status to deleted
@@ -122,7 +118,7 @@ namespace web_ver_2.Controllers
 
         public ActionResult Logout()
         {
-
+			//Clear Session and redirect to login page
 	        HttpContext.Session.Clear();
 	        HttpContext.Session.Remove("UserName");
 
