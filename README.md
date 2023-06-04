@@ -16,7 +16,8 @@ An ASP .NET web app used for uploading and sharing files and texts.
 - Reconfigure appsettings.json (replace my test keys and database DefaultConnection)
 - Replace RegionEndPoint in Home and User Controllers if your region is not Asia Pacific (Singapore)
 - Please note that the link used for sharing files feature is hard coded at Views/User/ManageFiles.cshtml at line 133 (I'm testing with mutiple ports so I need a way to easily change my links)
-- Build the solution and run it.
+- Run database migration or using your preferred method.
+- Build the solution.
 
 
 ## IDE/Tools used
