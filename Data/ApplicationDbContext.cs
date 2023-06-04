@@ -6,6 +6,7 @@ using System.Reflection.Metadata;
 
 namespace web_ver_2.Data
 {
+    //Set up DbContext
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

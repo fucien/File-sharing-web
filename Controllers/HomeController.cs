@@ -49,6 +49,7 @@ namespace web_ver_2.Controllers
         {
             if (ModelState.IsValid)
             {
+				//Check if password is correct
                 obj.Password = HashString(obj.Password);
                 var objFromDb = _db.User.Find(obj.Email);
                 if (objFromDb == null)
@@ -83,10 +84,12 @@ namespace web_ver_2.Controllers
         {
             if (ModelState.IsValid)
             {
+				//Check email if already exists
 	            if (obj.Email == _db.User.FirstOrDefault(u => u.Email == obj.Email)?.Email)
                 {
                     ModelState.AddModelError("Email", "Email already exists");
                 }
+				//Hash password
                 obj.Password = HashString(obj.Password);
                 try
                 {
@@ -117,6 +120,7 @@ namespace web_ver_2.Controllers
 
         public IActionResult File(string id)
         {
+			//get file data from database
 	        var fileData = new Models.File();
             fileData = _db.File.FirstOrDefault(u => u.URL == id);
             if (fileData == null || fileData.Status == "Deleted") //if file is deleted or doesn't exist
@@ -167,6 +171,15 @@ namespace web_ver_2.Controllers
 						_db.File.FirstOrDefault(u => u.Name == id).Status = "Deleted";
 
 						_db.SaveChanges();
+					}
+					//return string if file format is txt
+					if (response.Headers["Content-Type"] == "text/plain")
+					{
+						using (var reader = new StreamReader(response.ResponseStream))
+						{
+							var content = await reader.ReadToEndAsync();
+							return Content(content, "text/plain", Encoding.UTF8);
+						}
 					}
 
 					return File(response.ResponseStream, response.Headers["Content-Type"], id);

@@ -15,24 +15,28 @@
 			
 		}
 	</style>
+	<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
 </head>
 <body>
 <h1>Text Uploader </h1>
+<div class="form">
 <form asp-action="UploadText" method="post" enctype="multipart/form-data">
-	<label for="name">Name:</label>
+	<label style="color: #4F709C" for="name">Title:</label>
 	<input asp-for="Name" type="text" required><br><br>
 
 	<div id="textField">
-		<label id="text-label" name="content" for="textData">Text Input:</label>
-			<textarea asp-for="content"></textarea><br><br>
+		<label style="color: #4F709C" id="text-label" name="content" for="textData">Text Input:</label>
+		<textarea asp-for="content"></textarea><br><br>
 	</div>
 
-	<label for="deleteAfterAccess">Delete text after Access:</label>
+	<label style="color: #4F709C" for="deleteAfterAccess">Delete text after Access:</label>
 	<input asp-for="Status" type="checkbox" id="Status" name="Status"><br><br>
 
 	<input type="submit" value="Submit">
 </form>
 <p class="message">Want to upload file? <a href="./UploadFileView">Switch to file submission</a></p>
+</div>
 
 
 

@@ -6,23 +6,27 @@
 <html>
 <head>
 	<title>File Upload Form</title>
+	<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
 </head>
 <body>
 <h1>File Uploader</h1>
-<form asp-action="UploadFile" method="post" enctype="multipart/form-data">
+	<div class = "form">
+		<form asp-action="UploadFile" method="post" enctype="multipart/form-data">
 
 
-	<div id="fileInput" >
-		<label for="file">File Upload:</label>
-		<input type="file" id="file" name="file"><br><br>
-	</div>
+			<div id="fileInput" >
+				<label style="color: #4F709C" for="file">File Upload:</label>
+				<input style="color: #4F709C" type="file" id="file" name="file"><br><br>
+			</div>
 
-	<label for="deleteAfterAccess">Delete File after Access:</label>
-	<input asp-for="Status" type="checkbox" id="Status" name="Status"><br><br>
+			<label for="deleteAfterAccess" style="color: #4F709C">Delete File after Access:</label>
+			<input asp-for="Status" type="checkbox" id="Status" name="Status"><br><br>
 
-	<input type="submit" value="Submit">
-</form>
-	<p class="message">Want to upload text? <a href="./UploadTextView">Switch to text submission</a></p>
+			<input type="submit" value="Submit">
+		</form>
+		<p class="message">Want to upload text? <a href="./UploadTextView">Switch to text submission</a></p>
+	<div/>
 
 
 </body>

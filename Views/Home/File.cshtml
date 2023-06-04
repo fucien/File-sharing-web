@@ -1,10 +1,11 @@
 ﻿@model File
 
 
+<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 
-<p> @Model.Email </p>
+<p> @Model.Email has shared a file/text with you</p>
 
 <form asp-action="DownloadFile">
 	<input type="hidden" id="id" name = "id" value="@Model.Name" />
-	<input type="submit" value="Download" />
+	<input type="submit" value="Download/View text" />
 </form>

@@ -8,7 +8,11 @@
 <html>
 <head>
 	<style>
-
+.btn-containter {
+	display: flex;
+	justify-content: space-around;
+	gap: 50px;
+}
 .button {
   font-size: 1em;
   padding: 10px;
@@ -79,15 +83,8 @@
 
 </head>
 <h1>File Manager</h1>
-<div class="container p-3">
-	<div class="row pt-4">
-		<div class="col-6">
-			<h2 class="text-primary">File List</h2>
-		</div>
-	</div>
-	<br /><br />
 
-	<table class="table table-bordered table-striped" style="width:100%">
+<table class="table table-bordered table-striped" style="width:100%; margin-right=100px">
 	<thead>
 	<tr>
 		<th>
@@ -116,26 +113,28 @@
 		@obj.Status
 	</td>
 		<td>
+			<div class = "btn-container">
 			<form method="post" asp-action="Delete" asp-route-id="@obj.Name">
-				<input type="hidden" name="Name" value="@obj.Name" />
+				<input type="hidden" name="Name" value="@obj.Name"/>
 				<button type="submit" class="btn btn-danger mx-2">
 					<i class="bi bi-trash-fill"></i> Delete
 				</button>
 			</form>
 
 			<div class="box">
-							<a class="btn btn-danger mx-2" href="#popup@(obj.Name)">View Link</a>
+				<a class="btn btn-danger mx-2" href="#popup@(obj.Name)">View Link</a>
 			</div>
 
-						<div id="popup@(obj.Name)" class="overlay">
-				<div class="popup">
-					<h2>Copy the below link to share your file</h2>
-					<a class="close" href="#">&times;</a>
-					<div class="content">
-						localhost:7265/Home/File/@(obj.URL)
+				<div id="popup@(obj.Name)" class="overlay">
+					<div class="popup">
+						<h2>Copy the below link to share your file</h2>
+						<a class="close" href="#">&times;</a>
+						<div class="content">
+							localhost:7265/Home/File/@(obj.URL)
+						</div>
 					</div>
 				</div>
-			</div>
+				</div>
 		</td>
 		</tr>
 }
@@ -143,4 +142,4 @@
 		</tbody>
 
 	</table>
-</div>
+</>

@@ -12,6 +12,8 @@
     margin: auto;
 }
 
+
+
 .form {
     position: relative;
     z-index: 1;
@@ -39,11 +41,11 @@
         font-family: "Roboto", sans-serif;
         text-transform: uppercase;
         outline: 0;
-        background: #4CAF50;
+        background: #4F709C;
         width: 100%;
         border: 0;
         padding: 15px;
-        color: #FFFFFF;
+        color: #F5EFE7;
         font-size: 14px;
         -webkit-transition: all 0.3 ease;
         transition: all 0.3 ease;
@@ -51,7 +53,7 @@
     }
 
         .form button:hover, .form button:active, .form button:focus {
-            background: #43A047;
+            background: #213555;
         }
 
     .form .message {
@@ -61,7 +63,7 @@
     }
 
         .form .message a {
-            color: #4CAF50;
+            color: #4F709C;
             text-decoration: none;
         }
 
@@ -103,14 +105,14 @@
             }
 
             .container .info span .fa {
-                color: #EF3B3A;
+                color: #4F709C;
             }
 
 body {
-    background: #76b852; /* fallback for old browsers */
-    background: rgb(141,194,111);
-    background: linear-gradient(90deg, rgba(141,194,111,1) 0%, rgba(118,184,82,1) 50%);
+    background: #D8C4B6; /* fallback for old browsers */
+    background: rgb(216, 196, 182);
     font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: white;
 }

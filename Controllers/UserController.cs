@@ -102,7 +102,7 @@ namespace web_ver_2.Controllers
 				client.PutObjectAsync(new PutObjectRequest
 				{
 						BucketName = "ienbucket",
-						Key = Name + ".txt",
+						Key = Name + ".txt", // <-- KeyName
 						ContentBody = content,
 						CannedACL = S3CannedACL.PublicRead
 					}
