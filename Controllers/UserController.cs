@@ -53,7 +53,7 @@ namespace web_ver_2.Controllers
 					file.CopyTo(newMemoryStream);
 					var equest = new TransferUtilityUploadRequest()
 					{
-						BucketName = "ienbucket",
+						BucketName = _conf.GetSection("AWS")["BucketName"],
 						Key = file.FileName,
 						InputStream = newMemoryStream,
 						ContentType = file.ContentType,
@@ -101,7 +101,7 @@ namespace web_ver_2.Controllers
 			{
 				client.PutObjectAsync(new PutObjectRequest
 				{
-						BucketName = "ienbucket",
+						BucketName = _conf.GetSection("AWS")["BucketName"],
 						Key = Name + ".txt", // <-- KeyName
 						ContentBody = content,
 						CannedACL = S3CannedACL.PublicRead
@@ -139,7 +139,7 @@ namespace web_ver_2.Controllers
 	        {
 				//delete file from aws server
 				var transferUtility = new TransferUtility(client);
-				await transferUtility.S3Client.DeleteObjectAsync("ienbucket", id);
+				await transferUtility.S3Client.DeleteObjectAsync(_conf.GetSection("AWS")["BucketName"], id);
 		        //Change file status to deleted
 
 		        _db.File.FirstOrDefault(u => u.Name == id).Status = "Deleted";
@@ -174,24 +174,7 @@ namespace web_ver_2.Controllers
 
             return RedirectToAction("Index", "Home");   
 		}
-		// POST: UserController/UploadFile
 
-
-
-		// POST: UserController/Create
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public ActionResult Create(IFormCollection collection)
-		//{
-		//    try
-		//    {
-		//        return RedirectToAction(nameof(Index));
-		//    }
-		//    catch
-		//    {
-		//        return View();
-		//    }
-		//}
 		static string HashString(string text, string salt = "")
 		{
 			if (String.IsNullOrEmpty(text))

@@ -150,7 +150,7 @@ namespace web_ver_2.Controllers
 				var transferUtility = new TransferUtility(client);
 				try
 				{
-					var response = await transferUtility.S3Client.GetObjectAsync("ienbucket", id);
+					var response = await transferUtility.S3Client.GetObjectAsync(_conf.GetSection("AWS")["BucketName"], id);
 					if (response.ResponseStream == null)
 					{
 						return RedirectToAction("Home", "User");
@@ -162,7 +162,7 @@ namespace web_ver_2.Controllers
 						//delete file from aws server
 						var deleteObjectRequest = new DeleteObjectRequest
 						{
-							BucketName = "ienbucket",
+							BucketName = _conf.GetSection("AWS")["BucketName"],
 							Key = id
 						};
 						await client.DeleteObjectAsync(deleteObjectRequest);
