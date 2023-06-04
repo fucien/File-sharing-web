@@ -94,8 +94,15 @@ namespace web_ver_2.Controllers
 		}
         public IActionResult Index()
         {
-            return View();
-        }
+			if (HttpContext.Session.GetString("UserName") == null)
+			{
+				return View();
+			}
+			else
+			{
+				return RedirectToAction("Home", "User");
+			}
+		}
 
 
         public IActionResult Privacy()

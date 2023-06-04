@@ -13,53 +13,60 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using File = web_ver_2.Models.File;
 using web_ver_2.Data;
+using static Azure.Core.HttpHeader;
 
 namespace web_ver_2.Controllers
 {
-    public class UserController : Controller
-    {
-	    private readonly ApplicationDbContext _db;
+	public class UserController : Controller
+	{
+		private readonly ApplicationDbContext _db;
 
-	    private readonly IConfiguration _conf;
+		private readonly IConfiguration _conf;
 
-	    public UserController(ApplicationDbContext db, IConfiguration conf)
-	    {
-		    _db = db;
+		public UserController(ApplicationDbContext db, IConfiguration conf)
+		{
+			_db = db;
 			_conf = conf;
-	    }
+		}
 
 		// GET: UserController
 		[Authentication]
-        public IActionResult UploadFileView()
-        {
-            return View();
-        }
-        public async Task<IActionResult> UploadFile(IFormFile file, bool Status)
-        {
-			
-	        using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"], _conf.GetSection("AWS")["SecretKey"],
-		               RegionEndpoint.APSoutheast1))
-	        {
-		        using (var newMemoryStream = new MemoryStream())
-		        {
-			        file.CopyTo(newMemoryStream);
-			        var equest = new TransferUtilityUploadRequest()
-			        {
-				        BucketName = "ienbucket",
-				        Key = file.FileName,
-				        InputStream = newMemoryStream,
-				        ContentType = file.ContentType,
-				        CannedACL = S3CannedACL.PublicRead
-			        };
+		public IActionResult UploadFileView()
+		{
+			return View();
+		}
 
-			        var fileTransferUtility = new TransferUtility(client);
-			        await fileTransferUtility.UploadAsync(equest);
-		        }
+		[Authentication]
+		[HttpPost]
+		public async Task<IActionResult> UploadFile(IFormFile file, bool Status)
+		{
+
+			using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"],
+				       _conf.GetSection("AWS")["SecretKey"],
+				       RegionEndpoint.APSoutheast1))
+			{
+				using (var newMemoryStream = new MemoryStream())
+				{
+					//Uploading file to S3
+					file.CopyTo(newMemoryStream);
+					var equest = new TransferUtilityUploadRequest()
+					{
+						BucketName = "ienbucket",
+						Key = file.FileName,
+						InputStream = newMemoryStream,
+						ContentType = file.ContentType,
+						CannedACL = S3CannedACL.PublicRead
+					};
+
+					var fileTransferUtility = new TransferUtility(client);
+					await fileTransferUtility.UploadAsync(equest);
+				}
+
 				//Adding uploaded file to database
 				File dbFile = new File();
 				dbFile.URL = HashString(file.FileName + HttpContext.Session.GetString("UserMame"));
 				dbFile.Name = file.FileName;
-				dbFile.Type = file.ContentType;
+				dbFile.Type = file.FileName.Split('.')[1];
 				if (Status == true)
 				{
 					dbFile.Status = "DeleteOnView";
@@ -68,11 +75,43 @@ namespace web_ver_2.Controllers
 				{
 					dbFile.Status = "Active";
 				}
+
 				dbFile.Email = HttpContext.Session.GetString("UserName");
 				_db.File.Add(dbFile);
 				_db.SaveChanges();
-				return RedirectToAction("Home", "User");
+				return RedirectToAction("ManageFiles", "User");
+			}
+		}
+
+		[Authentication,ActionName("Delete")]
+		[HttpPost]
+
+		public async Task<IActionResult> DeleteFile(string id)
+        {
+
+	        using (var client = new AmazonS3Client(_conf.GetSection("AWS")["AccessKey"], _conf.GetSection("AWS")["SecretKey"],
+		               RegionEndpoint.APSoutheast1))
+	        {
+				var transferUtility = new TransferUtility(client);
+				await transferUtility.S3Client.DeleteObjectAsync("ienbucket", id);
+		        //Change file status to deleted
+
+		        _db.File.FirstOrDefault(u => u.Name == id).Status = "Deleted";
+				_db.SaveChanges();
+				
+
+		        ViewBag.Message = "File Deleted Successfully";
+		        return RedirectToAction("ManageFiles");
 	        }
+		}
+
+		[Authentication]
+
+        public IActionResult ManageFiles()
+        {
+			//Get user files from database
+			IEnumerable<File> objList = _db.File.Where(u => u.Email == HttpContext.Session.GetString("UserName")).ToList();
+			return View(objList);
         }
 
         [Authentication]
