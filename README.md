@@ -16,7 +16,7 @@ An ASP .NET web app used for uploading and sharing files and texts.
 - Reconfigure appsettings.json (replace my test keys and database DefaultConnection)
 - Replace RegionEndPoint in Home and User Controllers if your region is not Asia Pacific (Singapore)
 - Please note that the link used for sharing files feature is hard coded at Views/User/ManageFiles.cshtml at line 133 (I'm testing with mutiple ports so I need a way to easily change my links)
-- Run database migration or using your preferred method.
+- Run database migration or use your preferred method.
 - Build the solution.
 
 
@@ -31,3 +31,6 @@ An ASP .NET web app used for uploading and sharing files and texts.
 - Docker File
 - Alerts on successful operations.
 - Tests
+
+##Known bugs
+- Sometimes the uploaded file are not immediately accessible via shared link
