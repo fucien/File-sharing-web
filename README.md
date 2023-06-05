@@ -32,5 +32,5 @@ An ASP .NET web app used for uploading and sharing files and texts.
 - Alerts on successful operations.
 - Tests
 
-##Known bugs
-- Sometimes the uploaded file are not immediately accessible via shared link
+## Known bugs
+- Unable to re-upload deleted file 
